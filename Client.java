@@ -1,6 +1,9 @@
 import java.net.*;
 import java.io.*;
+import java.text.NumberFormat;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Client
@@ -24,6 +27,7 @@ public class Client
 		long endTime;
 		long timeElapsed;
 
+		// loop until all input parameters are met, then continue
 		while(true) {
 			System.out.println("Please indicate the website you want, the number of bytes, and timeout");
 			String input = scanner.nextLine();
@@ -32,11 +36,30 @@ public class Client
 				startTime = System.nanoTime();
 				userInput = input.split(" ");
 
-				if (userInput.length != 3) throw new Error("Please enter data in the form of URL BYTES TIMEOUT, separated by spaces.");
+				// ensure that the user passed three parameters
+				if (userInput.length != 3) throw new Exception("Please enter data in the form of URL BYTES TIMEOUT, separated by spaces.");
+
+				// ensure that the second and third parameters are numbers
+				Integer.parseInt(userInput[1]);
+				Integer.parseInt(userInput[2]);
+
+				// ensure that the first parameter matches the domain regex
+				Pattern p = Pattern.compile("(http:\\/\\/[www\\.]*[A-z]+\\.[A-z]+)");
+				Matcher m = p.matcher(userInput[0]);
+
+				if (!m.find()) {
+					throw new Exception("Please make sure your domain is in the format 'http://yourdomain.tld'!");
+				}
 
 				break;
-			} catch (Error error) {
-				System.out.println(error);
+			} catch (Exception error) {
+				// catch number format exceptions
+				if (error instanceof NumberFormatException) {
+					System.out.println("Error! Please make sure that the BYTES and the TIMEOUT parameters are integers!");
+				} else {
+					System.out.println(error);
+				}
+
 			}
 		}
 
