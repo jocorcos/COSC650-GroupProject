@@ -166,9 +166,6 @@ public class Client
 		socket.close();	
 	}
 
-
-	//http://www.google.com 2000 200
-
 	public class clientThread extends Thread
 	{
 		String parameter;
